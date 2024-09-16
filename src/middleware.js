@@ -7,7 +7,7 @@ const adminPath = ["/dashboard"];
 export async function middleware(req) {
   // Check if the user is authenticated using next-auth's getToken
   const session = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-
+  console.log(session, "checking session");
   const { pathname } = req.nextUrl;
 
   // If trying to access /dashboard and not logged in, redirect to login
