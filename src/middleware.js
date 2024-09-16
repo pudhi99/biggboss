@@ -1,36 +1,35 @@
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 
-// Define the routes that need authentication
 const adminPath = ["/dashboard"];
 
 export async function middleware(req) {
-  // Check if the user is authenticated using next-auth's getToken
-  const forwardedProto = req.headers.get("x-forwarded-proto");
-  console.log(forwardedProto, "checking forwarded protocol");
+  const cookieName =
+    process.env.NODE_ENV === "production"
+      ? "__Secure-next-auth.session-token"
+      : "next-auth.session-token";
 
-  console.log(process.env.NEXTAUTH_SECRET, "checking NEXTAUTH_SECRET key");
-  const session = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-  console.log(session, "checking session");
+  const session = await getToken({
+    req,
+    secret: process.env.NEXTAUTH_SECRET,
+    cookieName,
+  });
+
   const { pathname } = req.nextUrl;
 
-  // If trying to access /dashboard and not logged in, redirect to login
   if (adminPath.includes(pathname) && !session) {
     const loginUrl = new URL("/login", req.url);
     return NextResponse.redirect(loginUrl);
   }
 
-  // If already logged in, prevent access to /login page
   if (pathname === "/login" && session) {
     const dashboard = new URL("/dashboard", req.url);
     return NextResponse.redirect(dashboard);
   }
 
-  // Continue if no redirection is needed
   return NextResponse.next();
 }
 
-// Apply middleware only to specific paths
 export const config = {
   matcher: ["/dashboard", "/login"],
 };
