@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import HomeStaticData from "@/components/homepage/HomeStaticData";
 import HomeVotingPercentages from "@/components/homepage/HomeVotingPercentages";
 import MissedCallVoting from "@/components/homepage/MissedCallVoting";
@@ -6,6 +7,8 @@ import ShowDetails from "@/components/homepage/ShowDetails";
 import Image from "next/image";
 
 export default async function Home() {
+  const session = await auth();
+  console.log(session, "getting session data");
   const getData = async () => {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/week-updates`,

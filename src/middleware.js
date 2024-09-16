@@ -1,11 +1,15 @@
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
+import { auth } from "./auth";
 
 // Define the routes that need authentication
 const adminPath = ["/dashboard"];
 
 export async function middleware(req) {
   // Check if the user is authenticated using next-auth's getToken
+  const forwardedProto = req.headers.get("x-forwarded-proto");
+  console.log(forwardedProto, "checking forwarded protocol");
+
   console.log(process.env.NEXTAUTH_SECRET, "checking NEXTAUTH_SECRET key");
   const session = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
   console.log(session, "checking session");
