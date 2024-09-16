@@ -6,8 +6,8 @@ const adminPath = ["/dashboard"];
 export async function middleware(req) {
   const cookieName =
     process.env.NODE_ENV === "production"
-      ? "__Secure-next-auth.session-token"
-      : "next-auth.session-token";
+      ? "__Secure-authjs.session-token"
+      : "authjs.session-token";
 
   const session = await getToken({
     req,
