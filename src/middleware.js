@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
-import { auth } from "./auth";
 
 // Define the routes that need authentication
 const adminPath = ["/dashboard"];
