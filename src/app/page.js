@@ -4,6 +4,7 @@ import HomeVotingPercentages from "@/components/homepage/HomeVotingPercentages";
 import MissedCallVoting from "@/components/homepage/MissedCallVoting";
 import NominatedContestantsData from "@/components/homepage/NominatedContestantsData";
 import ShowDetails from "@/components/homepage/ShowDetails";
+import VotingPoll from "@/components/homepage/VotingPoll";
 import Image from "next/image";
 
 export default async function Home() {
@@ -57,6 +58,8 @@ export default async function Home() {
           <div className="order-5 sm:order-5">
             <ShowDetails />
           </div>
+
+          <VotingPoll weekUpdates={data} />
         </div>
       </div>
     </div>

@@ -4,7 +4,6 @@ import Image from "next/image";
 
 const NominatedContestantsData = async (props) => {
   const nominatedContestantsData = props.weekUpdates[0]?.nominatedContestants;
-
   return (
     <div>
       <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
