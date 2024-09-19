@@ -43,8 +43,8 @@ export default async function Home() {
         {/* Flex container for managing component order */}
         <div className="flex flex-col sm:flex-col sm:gap-4">
           {/* For screens below `sm`, HomeVotingPercentages comes first */}
-          <div className="order-1 sm:order-4">
-            <HomeVotingPercentages weekUpdates={data} />
+          <div className="order-1 sm:order-4" id="vote">
+            <VotingPoll weekUpdates={data} />
           </div>
           <div className="order-2 sm:order-1">
             <HomeStaticData />
@@ -56,10 +56,11 @@ export default async function Home() {
             <MissedCallVoting weekUpdates={data} />
           </div>
           <div className="order-5 sm:order-5">
+            <HomeVotingPercentages weekUpdates={data} />
+          </div>
+          <div className="order-6 sm:order-6">
             <ShowDetails />
           </div>
-
-          <VotingPoll weekUpdates={data} />
         </div>
       </div>
     </div>

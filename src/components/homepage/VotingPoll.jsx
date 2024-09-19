@@ -1,4 +1,6 @@
-"use state";
+"use client";
+
+import { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -9,114 +11,229 @@ import {
 } from "@/components/ui/table";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-
 import Image from "next/image";
-import mongo from "@/utils/db";
-import { revalidatePath } from "next/cache";
+import { Skeleton } from "@/components/ui/skeleton"; // Import ShadCN Skeleton component
+
+// Helper function to shuffle the array (Fisher-Yates Algorithm)
+const shuffleArray = (array) => {
+  const shuffledArray = [...array];
+  for (let i = shuffledArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+  }
+  return shuffledArray;
+};
 
 const VotingPoll = (props) => {
-  // Fetch the latest week data
+  const [nominatedContestants, setNominatedContestants] = useState([]);
+  const [showVotes, setShowVotes] = useState(false);
+  const [canVote, setCanVote] = useState(true); // Track if the user can vote
+  const [loading, setLoading] = useState(true); // Add loading state
+  const [animation, setAnimation] = useState(false); // Track animation state
+
   const latestWeekData = props?.weekUpdates[0];
-
-  // Sort based on votes (descending)
-  const nominatedContestants = latestWeekData?.nominatedContestants?.sort(
-    (a, b) => b.votes - a.votes
-  );
-
-  // Calculate total votes for progress bar
   const totalVotes = nominatedContestants?.reduce(
     (acc, contestant) => acc + contestant.votes,
     0
   );
 
-  // Server Action to handle voting logic
-  const handleVote = async (formData) => {
-    "use server";
-    const db = await mongo();
-    let contestantId = null;
-
-    // Log and extract form data
-    for (const [key, value] of formData.entries()) {
-      console.log(`Field: ${key}, Value: ${value}`);
-
-      // Check for contestantId
-      if (key === "contestantId") {
-        contestantId = value;
-      }
+  // Shuffle contestants before voting
+  useEffect(() => {
+    if (latestWeekData?.nominatedContestants) {
+      const shuffledContestants = shuffleArray(
+        latestWeekData.nominatedContestants
+      );
+      setNominatedContestants(shuffledContestants);
+      setLoading(false); // Stop loading once data is available
     }
-    console.log(contestantId, "latestWeekData._id");
-    // Update the vote count for the contestant
-    const result = await db.collection("weekUpdates").updateOne(
-      {
-        week: latestWeekData.week,
-        "nominatedContestants.id": contestantId,
-      },
-      {
-        $inc: { "nominatedContestants.$.votes": 1 },
+
+    // Check if the user can vote based on date
+    const lastVoteDate = localStorage.getItem("lastVoteDate");
+    const todayDate = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+
+    if (lastVoteDate === todayDate) {
+      setCanVote(false); // Disable voting if already voted today
+      setShowVotes(true); // Show votes since the user has already voted today
+      // Sort the contestants by votes if the user has already voted
+      const sortedContestants = [...latestWeekData.nominatedContestants].sort(
+        (a, b) => b.votes - a.votes
+      );
+      setNominatedContestants(sortedContestants);
+    }
+  }, [latestWeekData]);
+
+  const onVoteSubmit = async (event) => {
+    event.preventDefault();
+
+    if (!canVote) return;
+
+    const formData = new FormData(event.target);
+    const contestantId = formData.get("contestantId");
+    const week = latestWeekData?.week;
+
+    try {
+      const response = await fetch("/api/vote", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ week, contestantId }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update vote");
       }
-    );
-    console.log(result, "checking result");
-    // Check if the update was successful
-    if (result.modifiedCount > 0) {
-      // Revalidate the path to refresh the page and show updated data
-      revalidatePath("/");
-      return { success: true, message: "Vote recorded successfully!" };
-    } else {
-      return { success: false, message: "Failed to record vote." };
+
+      const updatedData = await response.json();
+
+      // Update the nominatedContestants state with the new vote count
+      const updatedContestants = nominatedContestants.map((contestant) => {
+        if (contestant._id === contestantId) {
+          return {
+            ...contestant,
+            votes: contestant.votes + 1,
+          };
+        }
+        return contestant;
+      });
+
+      // Sort contestants by votes after voting (highest to lowest)
+      const sortedContestants = [...updatedContestants].sort(
+        (a, b) => b.votes - a.votes
+      );
+      setNominatedContestants(sortedContestants);
+
+      setShowVotes(true); // Show the votes for all contestants
+
+      // Save the current date to localStorage as the last vote date
+      const todayDate = new Date().toISOString().split("T")[0];
+      localStorage.setItem("lastVoteDate", todayDate);
+      setCanVote(false); // Disable voting for the day
+
+      // Trigger animation
+      setAnimation(true);
+      setTimeout(() => setAnimation(false), 1000); // Reset animation state after 1 second
+    } catch (err) {
+      console.log(err.message);
     }
   };
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-semibold mb-6">Voting Poll</h1>
-      <Table className="w-full table-auto rounded-lg shadow-md">
-        <TableHeader>
-          <TableRow>
-            <TableHead className="px-4 py-2">Contestant</TableHead>
-            <TableHead className="px-4 py-2">Image</TableHead>
-            <TableHead className="px-4 py-2">Votes</TableHead>
-            <TableHead className="px-4 py-2">Progress</TableHead>
-            <TableHead className="px-4 py-2">Vote</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {nominatedContestants?.map((contestant) => (
-            <TableRow key={contestant.id}>
-              <TableCell className="px-4 py-2">{contestant.name}</TableCell>
-              <TableCell className="px-4 py-2">
-                <Image
-                  src={contestant.image}
-                  alt={contestant.name}
-                  width={50}
-                  height={50}
-                  className="rounded-full"
-                />
-              </TableCell>
-              <TableCell className="px-4 py-2">{contestant.votes}</TableCell>
-              <TableCell className="px-4 py-2">
-                <Progress
-                  value={
-                    totalVotes > 0 ? (contestant.votes / totalVotes) * 100 : 0
-                  }
-                />
-              </TableCell>
-              <TableCell className="px-4 py-2">
-                {/* {console.log("Contestant ID:", contestant)} */}
-                {/* <pre>{JSON.stringify(contestant, null, 2)}</pre> */}
-                {/* Form submission to handle voting */}
-                <form action={handleVote}>
-                  <input
-                    type="hidden"
-                    name="contestantId"
-                    value={contestant._id}
-                  />
-                  <Button type="submit">Vote</Button>
-                </form>
-              </TableCell>
+
+      {loading ? (
+        // Show Skeleton if loading
+        <Table className="w-full table-auto rounded-lg shadow-md">
+          <TableHeader>
+            <TableRow>
+              <TableHead className="px-4 py-2">Contestant</TableHead>
+              <TableHead className="px-4 py-2">Image</TableHead>
+              <TableHead className="px-4 py-2">Vote</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {Array.from({ length: 6 }).map((_, index) => (
+              <TableRow key={index}>
+                <TableCell className="px-4 py-2">
+                  <Skeleton className="h-6 w-32" />
+                </TableCell>
+                <TableCell className="px-4 py-2">
+                  <Skeleton className="h-12 w-12 rounded-full" />
+                </TableCell>
+                <TableCell className="px-4 py-2">
+                  <Skeleton className="h-6 w-24" />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      ) : (
+        // Show the real data once loaded
+        <Table className="w-full table-auto rounded-lg shadow-md">
+          <TableHeader>
+            <TableRow>
+              <TableHead className="px-4 py-2">Contestant</TableHead>
+              <TableHead className="px-4 py-2">Image</TableHead>
+              {showVotes ? (
+                <>
+                  <TableHead className="px-4 py-2">Votes</TableHead>
+                  <TableHead className="px-4 py-2">Progress</TableHead>
+                </>
+              ) : null}
+              {canVote ? (
+                <TableHead className="px-4 py-2">Action</TableHead>
+              ) : null}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {nominatedContestants?.map((contestant) => (
+              <TableRow
+                key={contestant._id}
+                className={`transition-transform duration-500 ${
+                  animation ? "transform scale-105" : ""
+                }`}
+              >
+                <TableCell className="px-4 py-2">{contestant.name}</TableCell>
+                <TableCell className="px-4 py-2">
+                  <div className="relative w-16 h-16 overflow-hidden rounded-full">
+                    <Image
+                      src={contestant.image}
+                      alt={contestant.name}
+                      layout="fill"
+                      className="object-cover scale-150 translate-y-4"
+                    />
+                  </div>
+                </TableCell>
+                {!showVotes && canVote ? (
+                  <TableCell className="px-4 py-2">
+                    <form onSubmit={onVoteSubmit}>
+                      <input
+                        type="hidden"
+                        name="contestantId"
+                        value={contestant._id}
+                      />
+                      <Button
+                        type="submit"
+                        className="bg-blue-600 hover:bg-blue-700 text-white transition-all duration-300"
+                      >
+                        Vote
+                      </Button>
+                    </form>
+                  </TableCell>
+                ) : null}
+
+                {showVotes && (
+                  <>
+                    <TableCell className="px-4 py-2">
+                      <span className="font-semibold">
+                        {contestant.votes} votes
+                      </span>
+                    </TableCell>
+                    <TableCell className="px-4 py-2">
+                      <Progress
+                        value={
+                          totalVotes > 0
+                            ? (contestant.votes / totalVotes) * 100
+                            : 0
+                        }
+                        className={`w-full ${
+                          totalVotes > 0
+                            ? "bg-gradient-to-r from-zinc-700 to-green-200"
+                            : "bg-gray-300"
+                        } transition-all duration-500 h-3 ease-in-out`}
+                      />
+                      <span className="font-semibold ml-2">
+                        {((contestant.votes / totalVotes) * 100).toFixed(2)}%
+                      </span>
+                    </TableCell>
+                  </>
+                )}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
     </div>
   );
 };

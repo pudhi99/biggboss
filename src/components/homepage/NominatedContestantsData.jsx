@@ -1,6 +1,8 @@
 import React from "react";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import Image from "next/image";
+import Link from "next/link";
+import { Button } from "../ui/button";
 
 const NominatedContestantsData = async (props) => {
   const nominatedContestantsData = props.weekUpdates[0]?.nominatedContestants;
@@ -30,9 +32,9 @@ const NominatedContestantsData = async (props) => {
 
             {/* Vote Button - Positioned below the card */}
             <div className="flex justify-center mt-4">
-              <button className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none">
-                Vote Now
-              </button>
+              <Link href="#vote">
+                <Button className="">Vote</Button>
+              </Link>
             </div>
           </div>
         ))}
