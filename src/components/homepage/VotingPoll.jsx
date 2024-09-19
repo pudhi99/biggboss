@@ -119,7 +119,7 @@ const VotingPoll = (props) => {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="">
       <h1 className="text-3xl font-semibold mb-6">Voting Poll</h1>
 
       {loading ? (
