@@ -28,7 +28,7 @@ const VotingPoll = (props) => {
   const [nominatedContestants, setNominatedContestants] = useState([]);
   const [showVotes, setShowVotes] = useState(false);
   const [canVote, setCanVote] = useState(true); // Track if the user can vote
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // Add loading state
   const [animation, setAnimation] = useState(false); // Track animation state
 
   const latestWeekData = props?.weekUpdates[0];
