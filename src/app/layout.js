@@ -18,7 +18,7 @@ const geistMono = localFont({
 });
 
 export const metadata = {
-  title: "BiggBoss - Latest News, Contestant Profiles, and Voting Polls",
+  title: "BiggBoss vote - Latest News, Contestant Profiles, and Voting Polls",
   description:
     "Stay up-to-date with the latest BiggBoss news, get to know the contestants, and participate in exclusive voting polls.",
   openGraph: {

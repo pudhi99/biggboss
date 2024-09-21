@@ -51,21 +51,11 @@ const Login = () => {
           <CardContent className="space-y-2">
             <div className="space-y-1">
               <Label htmlFor="email">Email</Label>
-              <Input
-                type="email"
-                name="email"
-                id="email"
-                defaultValue="admin@gmail.com"
-              />
+              <Input type="email" name="email" id="email" />
             </div>
             <div className="space-y-1">
               <Label htmlFor="password">Password</Label>
-              <Input
-                type="password"
-                name="password"
-                id="password"
-                defaultValue="12345"
-              />
+              <Input type="password" name="password" id="password" />
             </div>
             <div className="space-y-1">
               <Button
