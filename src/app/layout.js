@@ -4,7 +4,7 @@ import Navbar from "../components/layout/Navbar";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
-import Head from "next/head";
+import Script from "next/script";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -52,14 +52,13 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Head>
-          <script
-            async
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4777990936225991"
-            crossOrigin="anonymous"
-          ></script>
-          <meta name="google-adsense-account" content="ca-pub-4777990936225991"></meta>
-        </Head>
+        <Script
+          strategy="afterInteractive"
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4777990936225991"
+          crossOrigin="anonymous"
+        />
+
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
