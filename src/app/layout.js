@@ -18,31 +18,31 @@ const geistMono = localFont({
 });
 
 export const metadata = {
-  title: "Bigg Boss - Latest News, Contestant Profiles, and Voting Polls",
+  title: "BiggBoss - Latest News, Contestant Profiles, and Voting Polls",
   description:
-    "Stay up-to-date with the latest Bigg Boss news, get to know the contestants, and participate in exclusive voting polls. Our comprehensive Bigg Boss blog has everything you need to follow the show.",
+    "Stay up-to-date with the latest BiggBoss news, get to know the contestants, and participate in exclusive voting polls.",
   openGraph: {
     title: "Bigg Boss",
     description:
-      "Your go-to source for Bigg Boss updates, contestant details, and interactive voting polls.",
-    url: "", // Replace with your actual URL
+      "Your go-to source for BiggBoss updates, contestant details, and interactive voting polls.",
+    url: "https://biggboss.vercel.app/", // Replace with your actual URL
     images: [
       {
-        url: "", // Replace with your actual image URL
+        url: "https://biggboss.vercel.app/favicon.ico", // Replace with your actual image URL
         width: 800,
         height: 600,
-        alt: "Bigg Boss Contestants",
+        alt: "BiggBoss Contestants",
       },
     ],
-    site_name: "Bigg Boss Blog",
+    site_name: "BiggBoss Blog",
   },
   twitter: {
     card: "summary_large_image",
     site: "@pudhi99", // Replace with your Twitter handle
     title: "Bigg Boss Blog",
     description:
-      "Your go-to source for Bigg Boss updates, contestant details, and interactive voting polls.",
-    image: "", // Replace with your actual image URL
+      "Your go-to source for BiggBoss updates, contestant details, and interactive voting polls.",
+    image: "https://biggboss.vercel.app/favicon.ico", // Replace with your actual image URL
   },
 };
 
