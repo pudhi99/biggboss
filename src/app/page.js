@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import HomeEliminatedList from "@/components/homepage/HomeEliminatedList";
 import HomeStaticData from "@/components/homepage/HomeStaticData";
 import HomeVotingPercentages from "@/components/homepage/HomeVotingPercentages";
 import MissedCallVoting from "@/components/homepage/MissedCallVoting";
@@ -59,6 +60,9 @@ export default async function Home() {
             <HomeVotingPercentages weekUpdates={data} />
           </div>
           <div className="order-6 sm:order-6">
+            <HomeEliminatedList weekUpdates={data} />
+          </div>
+          <div className="order-7 sm:order-7">
             <ShowDetails />
           </div>
         </div>
