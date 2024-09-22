@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function Footer() {
   return (
     <div className="w-full mt-8">
-      <div className="container xl:px-32 mx-auto">
+      <div className="container px-4 xl:px-32 mx-auto">
         {/* Underline separator */}
         <hr className="border-t border-gray-700 mb-8" />
 

@@ -121,12 +121,14 @@ const VotingPoll = (props) => {
   };
 
   return (
-    <div className="">
-      <h1 className="text-3xl font-semibold mb-6">Voting Poll</h1>
+    <div className="my-4">
+      <h1 className="text-2xl md:text-3xl  font-semibold text-orange-500 mb-6">
+        Voting Poll
+      </h1>
 
       {loading ? (
         // Show Skeleton if loading
-        <Table className="w-full table-auto rounded-lg shadow-md">
+        <Table className="w-full  -mx-4 table-auto rounded-lg shadow-md">
           <TableHeader>
             <TableRow>
               <TableHead className="px-4 py-2">Contestant</TableHead>

@@ -1,19 +1,16 @@
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { generateSlug } from "@/utils/slug"; // Slug generator utility
-import { getContestantDataBySlug } from "@/utils/contestant"; // Function to fetch contestant data
+import {
+  getContestantDataBySlug,
+  getWeekUpdatesForContestant,
+} from "@/utils/contestant";
 
 // Generate metadata dynamically
 export async function generateMetadata({ params }) {
   const { slug } = params;
-  console.log(
-    slug,
-    "checking slug =========================================================="
-  );
   const contestant = await getContestantDataBySlug(slug);
 
-  // If contestant is not found, set generic metadata
   if (!contestant) {
     return {
       title: "Contestant Not Found",
@@ -21,19 +18,13 @@ export async function generateMetadata({ params }) {
     };
   }
 
-  // Return dynamic metadata based on the contestant’s data
   return {
     title: `${contestant.name} - Bigg Boss Contestant`,
     description: contestant.description,
     openGraph: {
       title: `${contestant.name} - Bigg Boss Contestant`,
       description: contestant.description,
-      images: [
-        {
-          url: contestant.image,
-          alt: contestant.name,
-        },
-      ],
+      images: [{ url: contestant.image, alt: contestant.name }],
     },
     twitter: {
       card: "summary_large_image",
@@ -47,13 +38,23 @@ export async function generateMetadata({ params }) {
 export default async function ContestantPage({ params }) {
   const { slug } = params;
   const contestant = await getContestantDataBySlug(slug);
+  const weekUpdates = await getWeekUpdatesForContestant(contestant._id);
 
   if (!contestant) {
     return <h1>Contestant not found</h1>;
   }
 
+  // Filter the nominated and eliminated data
+  const nominatedWeeks = weekUpdates.filter((week) =>
+    week.nominatedContestants.some((nc) => nc._id === contestant._id)
+  );
+
+  const eliminatedWeek = weekUpdates.find((week) =>
+    week.eliminatedContestant.some((ec) => ec._id === contestant._id)
+  );
+
   return (
-    <section className="p-4">
+    <section className=" md:p-4">
       <h1 className="text-center text-3xl font-bold mb-6">{contestant.name}</h1>
       <div className="flex flex-col md:flex-row gap-4">
         <div className=" md:w-1/3">
@@ -75,6 +76,55 @@ export default async function ContestantPage({ params }) {
           </div>
         </CardContent>
       </div>
+
+      {/* Nominated Weeks Section */}
+      <div className="mt-6">
+        <h2 className="text-2xl font-bold mb-4">Nominated Weeks</h2>
+        {nominatedWeeks.length > 0 ? (
+          <Card className="p-4 shadow-md rounded-lg">
+            <CardContent>
+              <table className="min-w-full border-collapse">
+                <thead>
+                  <tr>
+                    <th className="text-left border-b py-2">Week</th>
+                    <th className="text-left border-b py-2">Votes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {nominatedWeeks.map((week, index) => (
+                    <tr key={index}>
+                      <td className="border-b py-2">{week.week}</td>
+                      <td className="border-b py-2">
+                        {
+                          week.nominatedContestants.find(
+                            (nc) => nc._id === contestant._id
+                          ).votes
+                        }
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </CardContent>
+          </Card>
+        ) : (
+          <p>This contestant was never nominated.</p>
+        )}
+      </div>
+
+      {/* Eliminated Week Section */}
+      {eliminatedWeek && (
+        <div className="mt-6">
+          <h2 className="text-2xl font-bold mb-4">Eliminated Week</h2>
+          <Card className="p-4 shadow-md rounded-lg bg-red-400/50">
+            <CardContent>
+              <h3 className="font-semibold text-lg">
+                Eliminated in {eliminatedWeek.week}
+              </h3>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </section>
   );
 }

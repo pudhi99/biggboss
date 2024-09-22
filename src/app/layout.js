@@ -67,7 +67,9 @@ export default function RootLayout({ children }) {
           disableTransitionOnChange
         >
           <Navbar />
-          <div className="container xl:px-32 mx-auto">{children}</div>
+          <div className="container px-4 sm:px-0 xl:px-32 mx-auto">
+            {children}
+          </div>
           <Footer />
         </ThemeProvider>
         <Analytics />

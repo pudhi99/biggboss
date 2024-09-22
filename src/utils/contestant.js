@@ -25,3 +25,28 @@ export async function getAllContestants() {
 
   return contestants; // Return the JSON data
 }
+
+// utils/contestant.js
+
+export async function getWeekUpdatesForContestant(contestantId) {
+  try {
+    // Fetch week updates from the API
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/week-updates`
+    );
+
+    // If there's an error in fetching
+    if (!res.ok) {
+      throw new Error("Failed to fetch week updates");
+    }
+
+    const weekUpdates = await res.json();
+    console.log(weekUpdates, "checking week updatess ===================");
+
+    // Filter the week updates for this contestant (where they were nominated or eliminated)
+    return weekUpdates;
+  } catch (error) {
+    console.error("Error fetching week updates:", error);
+    return [];
+  }
+}
