@@ -19,7 +19,7 @@ const HomeEliminatedList = (props) => {
   const flattenedEliminatedContestants = eliminatedContestantsByWeek.flat();
 
   return (
-    <div className="py-5">
+    <div id="elimination" className="py-5">
       <h1 className="text-2xl md:text-3xl py-3 text-orange-500">
         Eliminated Contestants
       </h1>

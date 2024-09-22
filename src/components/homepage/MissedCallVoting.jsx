@@ -21,7 +21,7 @@ const MissedCallVoting = (props) => {
   };
 
   return (
-    <div className="py-4">
+    <div id="howToVote" className="py-4">
       <div className="py-4">
         <h1 className="text-2xl sm:text-3xl text-orange-500">
           Missed Call Voting Numbers
