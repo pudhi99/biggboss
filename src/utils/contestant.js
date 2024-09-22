@@ -22,5 +22,6 @@ export async function getAllContestants() {
     throw new Error("Failed to fetch contestants");
   }
   const contestants = await res.json();
+
   return contestants; // Return the JSON data
 }

@@ -20,6 +20,8 @@ const Navbar = () => {
   const { setTheme, theme } = useTheme();
   const isDarkMode = theme === "dark";
 
+  const links = [{ link: "/contestants", label: "Contestants" }];
+
   const toggleTheme = () => {
     setTheme(isDarkMode ? "light" : "dark");
   };
@@ -29,7 +31,7 @@ const Navbar = () => {
         <Link href="/">
           <h1>Bigg Boss</h1>
         </Link>
-        <div>
+        <div className="md:hidden">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline">
@@ -37,11 +39,12 @@ const Navbar = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              {links.map((eachLink) => (
+                <Link key={eachLink.link} href={eachLink.link}>
+                  <DropdownMenuItem>{eachLink.label}</DropdownMenuItem>
+                </Link>
+              ))}
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Billing</DropdownMenuItem>
-              <DropdownMenuItem></DropdownMenuItem>
               <DropdownMenuItem>
                 <div className="flex items-center space-x-2">
                   <Switch
@@ -60,6 +63,31 @@ const Navbar = () => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+        </div>
+        <div className="hidden md:block">
+          <div className="">
+            {links.map((eachLink) => (
+              <Link key={eachLink.link} href={eachLink.link}>
+                <Button variant="link">{eachLink.label}</Button>
+              </Link>
+            ))}
+          </div>
+        </div>
+        <div className="hidden md:block">
+          <div className="flex items-center space-x-2">
+            <Switch
+              id="theme-toggle"
+              checked={isDarkMode}
+              onCheckedChange={toggleTheme}
+            />
+            <Label htmlFor="theme-toggle">
+              {isDarkMode ? (
+                <MoonIcon className="h-[1.2rem] w-[1.2rem]" />
+              ) : (
+                <SunIcon className="h-[1.2rem] w-[1.2rem]" />
+              )}
+            </Label>
+          </div>
         </div>
       </div>
     </div>

@@ -1,10 +1,9 @@
 // src/app/sitemap.js (or wherever your sitemap function is defined)
 import { getAllContestants } from "@/utils/contestant"; // Ensure this function fetches all contestant data
+import { generateSlug } from "@/utils/slug";
 
 export default async function sitemap() {
-  // const contestants = await getAllContestants(); // Fetch all contestants
-  // console.log(contestants, "contestants ==============================");
-
+  const contestants = await getAllContestants(); // Fetch all contestants
   const baseUrl = "https://biggboss.vercel.app/";
 
   // Create the basic structure of the sitemap
@@ -29,16 +28,16 @@ export default async function sitemap() {
     },
   ];
 
-  // // Add contestant URLs
-  // contestants.forEach((contestant) => {
-  //   const slug = generateSlug(contestant.name); // Ensure you have a function to generate slugs
-  //   urls.push({
-  //     url: `${baseUrl}contestants/${slug}`,
-  //     lastModified: new Date(),
-  //     changeFrequency: "monthly",
-  //     priority: 0.7, // Adjust priority as needed
-  //   });
-  // });
+  // Add contestant URLs
+  contestants.forEach((contestant) => {
+    const slug = generateSlug(contestant.name); // Ensure you have a function to generate slugs
+    urls.push({
+      url: `${baseUrl}contestants/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.6, // Adjust priority as needed
+    });
+  });
 
   return urls;
 }
