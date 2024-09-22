@@ -3,6 +3,8 @@ import Link from "next/link";
 import { Card, CardContent, CardHeader } from "@/components/ui/card"; // ShadCN Card component
 import { Badge } from "@/components/ui/badge";
 import { generateSlug } from "@/utils/slug"; // Import slug generator
+import { ArrowRightIcon, ExternalLink } from "lucide-react";
+import { Button } from "../ui/button";
 
 export async function ContestantsPage(props) {
   const contestants = props.contestants;
@@ -41,11 +43,17 @@ function ContestantCard({ contestant }) {
 
         {/* Content Section */}
         <CardContent className="md:w-2/3 md:ml-6 flex flex-col">
-          <h2 className="font-bold text-lg mb-2">
-            <Link href={`/contestants/${generateSlug(contestant.name)}`}>
+          <Link href={`/contestants/${generateSlug(contestant.name)}`}>
+            <Button
+              variant="link"
+              className="font-bold text-lg mb-2 -ml-4 text-blue-600"
+            >
               {contestant.name}
-            </Link>
-          </h2>
+              <span className="ml-2">
+                <ExternalLink />
+              </span>
+            </Button>
+          </Link>
 
           {/* Display the full description */}
           <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 mb-4">

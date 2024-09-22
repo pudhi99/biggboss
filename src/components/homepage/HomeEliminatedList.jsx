@@ -18,8 +18,10 @@ const HomeEliminatedList = (props) => {
 
   return (
     <div className="py-5">
-      <h1 className="text-3xl py-3">Eliminated Contestants</h1>
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+      <h1 className="text-2xl md:text-3xl py-3 text-orange-500">
+        Eliminated Contestants
+      </h1>
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 w-full">
         {flattenedEliminatedContestants?.map((item) => (
           <div key={item.name} className="w-full">
             <div className="relative w-full h-40 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-xl overflow-hidden">
