@@ -56,7 +56,7 @@ export default async function ContestantPage({ params }) {
     <section className="p-4">
       <h1 className="text-center text-3xl font-bold mb-6">{contestant.name}</h1>
       <div className="flex flex-col md:flex-row gap-4">
-        <div className="md:w-1/3">
+        <div className=" md:w-1/3">
           <Image
             src={contestant.image}
             alt={contestant.name}
@@ -65,7 +65,7 @@ export default async function ContestantPage({ params }) {
             className="rounded-md object-cover"
           />
         </div>
-        <CardContent className="md:w-2/3">
+        <CardContent className="-ml-6 md:w-2/3">
           <p className="text-base md:text-md text-gray-600 dark:text-gray-400 mb-4">
             {contestant.description}
           </p>

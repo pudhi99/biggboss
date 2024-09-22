@@ -39,8 +39,8 @@ export default async function Home() {
   const data = await getData();
 
   return (
-    <div className="w-full px-3">
-      <div className="container xl:px-32 mx-auto">
+    <div className="">
+      <div className="">
         {/* Flex container for managing component order */}
         <div className="flex flex-col sm:flex-col sm:gap-4">
           {/* For screens below `sm`, HomeVotingPercentages comes first */}

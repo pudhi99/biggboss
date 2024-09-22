@@ -34,7 +34,7 @@ const page = async () => {
   }
   const contestants = await getContestants();
   return (
-    <div>
+    <div className="">
       <ContestantsPage contestants={contestants} />
     </div>
   );

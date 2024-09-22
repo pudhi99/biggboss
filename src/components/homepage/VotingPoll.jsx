@@ -13,6 +13,8 @@ import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton"; // Import ShadCN Skeleton component
+import Link from "next/link";
+import { generateSlug } from "@/utils/slug";
 
 // Helper function to shuffle the array (Fisher-Yates Algorithm)
 const shuffleArray = (array) => {
@@ -174,15 +176,23 @@ const VotingPoll = (props) => {
                   animation ? "transform scale-105" : ""
                 }`}
               >
-                <TableCell className="px-4 py-2">{contestant.name}</TableCell>
+                <TableCell className="px-4 py-2 hover:text-yellow-300 hover:underline">
+                  <Link href={`/contestants/${generateSlug(contestant.name)}`}>
+                    {contestant.name}
+                  </Link>
+                </TableCell>
                 <TableCell className="px-4 py-2">
                   <div className="relative w-16 h-16 overflow-hidden rounded-full">
-                    <Image
-                      src={contestant.image}
-                      alt={contestant.name}
-                      layout="fill"
-                      className="object-cover scale-150 translate-y-4"
-                    />
+                    <Link
+                      href={`/contestants/${generateSlug(contestant.name)}`}
+                    >
+                      <Image
+                        src={contestant.image}
+                        alt={contestant.name}
+                        layout="fill"
+                        className="object-cover scale-150 translate-y-4"
+                      />
+                    </Link>
                   </div>
                 </TableCell>
                 {!showVotes && canVote ? (

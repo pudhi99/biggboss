@@ -10,7 +10,7 @@ export async function ContestantsPage(props) {
   const contestants = props.contestants;
 
   return (
-    <section className="p-4">
+    <section className="p-2 md:p-4">
       <h1 className="text-center text-3xl font-bold mb-6">
         Bigg Boss Contestants List
       </h1>

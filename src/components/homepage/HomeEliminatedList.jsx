@@ -1,4 +1,6 @@
+import { generateSlug } from "@/utils/slug";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 const HomeEliminatedList = (props) => {
@@ -23,32 +25,39 @@ const HomeEliminatedList = (props) => {
       </h1>
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 w-full">
         {flattenedEliminatedContestants?.map((item) => (
-          <div key={item.name} className="w-full">
-            <div className="relative w-full h-40 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-xl overflow-hidden">
-              {/* Frame styling */}
-              <div className="relative h-full w-full flex items-end">
-                {/* Image */}
-                <Image
-                  src={item.image}
-                  alt={item.name}
-                  height="200"
-                  width="200"
-                  objectFit="cover"
-                  className="absolute mx-auto inset-0"
-                />
+          <Link
+            key={item.name}
+            href={`/contestants/${generateSlug(item.name)}`}
+          >
+            <div className="w-full group">
+              <div className="relative w-full h-40 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-xl overflow-hidden">
+                {/* Frame styling */}
+                <div className="relative h-full w-full flex items-end">
+                  {/* Image */}
+                  <Image
+                    src={item.image}
+                    alt={item.name}
+                    height="200"
+                    width="200"
+                    objectFit="cover"
+                    className="absolute mx-auto inset-0"
+                  />
+                </div>
               </div>
-            </div>
 
-            {/* Vote Button - Positioned below the card */}
-            <div className="flex flex-col text-center justify-center mt-4">
-              <div className=" text-red-500">
-                <h1>{item.week}</h1>
-              </div>
-              <div>
-                <p>{item.name}</p>
+              {/* Vote Button - Positioned below the card */}
+              <div className="flex flex-col text-center justify-center mt-4">
+                <div className=" text-red-500">
+                  <h1>{item.week}</h1>
+                </div>
+                <div>
+                  <p className="group-hover:text-yellow-300 group-hover:underline">
+                    {item.name}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>

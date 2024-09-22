@@ -66,7 +66,7 @@ export default function RootLayout({ children }) {
           disableTransitionOnChange
         >
           <Navbar />
-          {children}
+          <div className="container xl:px-32 mx-auto">{children}</div>
         </ThemeProvider>
         <Analytics />
         <SpeedInsights />

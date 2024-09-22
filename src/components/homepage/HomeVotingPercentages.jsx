@@ -8,6 +8,8 @@ import {
   TableRow,
 } from "@/components/ui/table"; // Import ShadCN components
 import { Progress } from "@/components/ui/progress"; // Import ShadCN Progress component
+import Link from "next/link";
+import { generateSlug } from "@/utils/slug";
 
 const HomeVotingPercentages = (props) => {
   const nominatedContestantsData = props.weekUpdates[0]?.nominatedContestants;
@@ -48,7 +50,11 @@ const HomeVotingPercentages = (props) => {
               .map((contestant) => (
                 <TableRow key={contestant.id}>
                   <TableCell className="px-4 py-2 text-lg font-medium">
-                    {contestant.name}
+                    <Link
+                      href={`/contestants/${generateSlug(contestant.name)}`}
+                    >
+                      {contestant.name}
+                    </Link>
                   </TableCell>
                   <TableCell className="px-4 py-2 text-lg font-semibold">
                     {contestant.votes}

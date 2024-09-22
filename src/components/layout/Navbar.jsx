@@ -68,7 +68,9 @@ const Navbar = () => {
           <div className="">
             {links.map((eachLink) => (
               <Link key={eachLink.link} href={eachLink.link}>
-                <Button variant="link">{eachLink.label}</Button>
+                <Button variant="link" className="hover:text-yellow-300">
+                  {eachLink.label}
+                </Button>
               </Link>
             ))}
           </div>
