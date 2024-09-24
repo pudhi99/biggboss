@@ -8,7 +8,12 @@ export function generateSlug(name) {
 
 // Fetch contestant data by slug
 export async function getContestantDataBySlug(slug) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/contestants`);
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/contestants`,
+    {
+      cache: "no-store", // Disable cache
+    }
+  );
   const contestants = await res.json();
 
   // Find contestant by dynamically generated slug
@@ -16,8 +21,12 @@ export async function getContestantDataBySlug(slug) {
 }
 
 export async function getAllContestants() {
-  // Replace this with your actual API fetching logic
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/contestants`);
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/contestants`,
+    {
+      cache: "no-store", // Disable cache
+    }
+  );
   if (!res.ok) {
     throw new Error("Failed to fetch contestants");
   }
@@ -30,9 +39,11 @@ export async function getAllContestants() {
 
 export async function getWeekUpdatesForContestant(contestantId) {
   try {
-    // Fetch week updates from the API
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/week-updates`
+      `${process.env.NEXT_PUBLIC_API_URL}/api/week-updates`,
+      {
+        cache: "no-store", // Disable cache
+      }
     );
 
     // If there's an error in fetching
@@ -41,7 +52,7 @@ export async function getWeekUpdatesForContestant(contestantId) {
     }
 
     const weekUpdates = await res.json();
-    console.log(weekUpdates, "checking week updatess ===================");
+    console.log(weekUpdates, "checking week updates ===================");
 
     // Filter the week updates for this contestant (where they were nominated or eliminated)
     return weekUpdates;
